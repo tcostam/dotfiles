@@ -118,7 +118,7 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 
 # Custom: Autojump
-[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+[ -f /usr/share/autojump/autojump.sh ] && . /usr/share/autojump/autojump.sh
 
 # Custom: NVM
 export NVM_DIR="$HOME/.nvm"
