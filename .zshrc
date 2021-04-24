@@ -117,6 +117,37 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv virtualenv-init -)"
 fi
 
+# Custom: activate pyenv virtualenv
+work() {
+    DIR_NAME=`basename "$PWD"`
+    echo "Activating virtualenv for $DIR_NAME"
+    pyenv deactivate; pyenv activate $DIR_NAME
+}
+
+# Custom: Docker
+run-dk() {
+    DIR_NAME=`basename "$PWD"`
+    if [ -e ${PWD}/Dockerfile ]; then
+        docker container stop ${DIR_NAME}
+        docker container rm ${DIR_NAME}
+        docker run -v ${PWD}/tmp:/tmp -v ${PWD}:/app -td --entrypoint bash --name ${DIR_NAME} ${DIR_NAME} "$@"
+    fi
+}
+
+reb-dk() {
+    DIR_NAME=`basename "$PWD"`
+    if [ -e ${PWD}/Dockerfile ]; then
+        docker build -t ${DIR_NAME} .
+    fi
+}
+
+bash-dk() {
+    DIR_NAME=`basename "$PWD"`
+    if [ -e ${PWD}/Dockerfile ]; then
+        docker exec -it ${DIR_NAME} bash
+    fi
+}
+
 # Custom: Autojump
 [ -f /usr/share/autojump/autojump.sh ] && . /usr/share/autojump/autojump.sh
 
@@ -127,3 +158,10 @@ export NVM_DIR="$HOME/.nvm"
 
 # Custom: Aliases
 alias gitp="GIT_SSH_COMMAND='ssh -i ~/.ssh/personal_github_key' git"
+export PATH="$HOME/.rbenv/bin:$PATH"
+
+# Custom: RBenv
+eval "$(rbenv init -)"
+
+# Custom: gradle
+export PATH=$PATH:/opt/gradle/gradle-6.8.3/bin
